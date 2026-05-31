@@ -21,7 +21,11 @@ export const App: React.FC = () => {
             : 'No selected person'}
         </h1>
 
-        <People people={peopleFromServer} onSelect={handleSelect} delay={300} />
+        <People
+          people={peopleFromServer}
+          onSelected={handleSelect}
+          delay={300}
+        />
       </main>
     </div>
   );

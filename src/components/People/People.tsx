@@ -4,11 +4,15 @@ import { Person } from '../../types/Person';
 
 interface Props {
   people: Person[];
-  onSelect: (person: Person | null) => void;
+  onSelected: (person: Person | null) => void;
   delay?: number;
 }
 
-export const People: React.FC<Props> = ({ people, onSelect, delay = 300 }) => {
+export const People: React.FC<Props> = ({
+  people,
+  onSelected,
+  delay = 300,
+}) => {
   const [typedText, setTypedText] = useState('');
   const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -19,7 +23,7 @@ export const People: React.FC<Props> = ({ people, onSelect, delay = 300 }) => {
     const text = event.target.value;
 
     setTypedText(text);
-    onSelect(null); // clear selected person on change
+    onSelected(null); // clear selected person on change
 
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
@@ -33,6 +37,13 @@ export const People: React.FC<Props> = ({ people, onSelect, delay = 300 }) => {
       previousTextRef.current = text;
 
       const trimmedText = text.trim();
+
+      if (!trimmedText && text.length > 0) {
+        setFilteredPeople([]);
+        setIsOpen(true);
+
+        return;
+      }
 
       if (!trimmedText) {
         setFilteredPeople(people);
@@ -58,7 +69,7 @@ export const People: React.FC<Props> = ({ people, onSelect, delay = 300 }) => {
   const handleSelect = (person: Person) => {
     setTypedText(person.name);
     setIsOpen(false);
-    onSelect(person);
+    onSelected(person);
   };
 
   const noResults = typedText.trim().length > 0 && filteredPeople.length === 0;
